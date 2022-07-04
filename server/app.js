@@ -1,7 +1,7 @@
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
-const port = 5000;
+const port = 3000;
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
@@ -11,7 +11,7 @@ const io = new Server(server);
 //     res.json({"users" : ["baba", "bibi"]});
 // });
 
-// this method creates a unique userID
+// // this method creates a unique userID
 
 const getUserID = () => {
     const s4 = () => {
@@ -20,17 +20,18 @@ const getUserID = () => {
     return s4() + s4() + "-" + s4()
 }
 
+server.listen(port, () => console.log(`Listening on port ${port}`));
+
 io.on('connection', (socket) => {
     console.log('Client connected');
 
     socket.on('client message', (msg) => {
         console.log('message: ' + msg);
-        socket.emit('bot message', "hello");
+        socket.emit('bot message', "hello i got your msg");
     });
 
-    socket.on('disconnect', () => {
-        console.log('user disconnected');
+    socket.on('disconnect', (reason) => {
+        console.log(`disconnect ${socket.id} due to ${reason}`);
     });
 });
 
-server.listen(port, () => console.log(`Listening on port ${port}`));
